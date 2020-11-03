@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pin Generator</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -15,13 +14,13 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="pin-generator half-width">
-                    <input id="input-add" type="text">
+                    <input id="generated-pin" type="text">
                     <button id="generate-btn">Generate Pin</button>
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="input-section half-width">
-                    <input id="input-adding" type="text">
+                <div class="input-section half-width" name="calc">
+                    <input id="write-generated-pin" type="text" name="txt">
                     <div class="numbers">
                         <div class="calc-body">
                             <div class="calc-button-row">
@@ -40,9 +39,10 @@
                                 <div class="button" value="3">3</div>
                             </div>
                             <div class="calc-button-row">
-                                    <div class="button operator" value="<"><</div>
-                                    <div class="button" value="0">0</div>
-                                    <div class="button operator" value="C">C</div>
+                                <div id="backspace" class="operator">
+                                    <</div>
+                                        <div class="button" value="0">0</div>
+                                        <div id="clear" class="operator" value="C">C</div>
                                 </div>
                                 <div>
                                     <button type="submit" id="submit-btn">Submit</button>
@@ -59,35 +59,62 @@
             </div>
 
             <script>
-
+                // Hide Action Message
                 const hideNot = document.getElementById('notify-1');
                 hideNot.style.display = "none";
                 const hideNot2 = document.getElementById('notify-2');
                 hideNot2.style.display = "none";
-                
+
+                /*--------onClick on """ Generate PIN """ button, each time generates a new PIN number--------*/
                 const generateBtn = document.getElementById('generate-btn');
-                generateBtn.addEventListener('click', function () {
+                generateBtn.addEventListener('click', function() {
                     var random = Math.floor(1000 + Math.random() * 9000);
 
-                    document.getElementById('input-add').value = random;
+                    document.getElementById('generated-pin').value = random;
                     const randomGen = random;
 
                     const submitBtn = document.getElementById('submit-btn');
-                    submitBtn.addEventListener('click', function () {
-                        const inputAdding = document.getElementById('input-adding');
+                    submitBtn.addEventListener('click', function() {
+                        const inputAdding = document.getElementById('write-generated-pin');
                         const inputAddingEx = parseInt(inputAdding.value);
                         if (randomGen == inputAddingEx) {
                             const notifyShow = document.getElementById('notify-2');
-                                notifyShow.style.display = "block";
-                        }
-                        else {
+                            notifyShow.style.display = "block";
+
+                        } else {
                             const notifyShow = document.getElementById('notify-1');
-                                 notifyShow.style.display = "block";
+                            notifyShow.style.display = "block";
+
                         }
+
                     })
 
                 })
 
+                /*---------onClick on the digit buttons, shows the digit in the display screen---------*/
+
+                var totalButton = document.querySelectorAll('.button');
+                for (let i = 0; i < totalButton.length; i++) {
+                    const signleButton = totalButton[i];
+
+                    signleButton.addEventListener('click', function() {
+                        const buttonNumber = this.innerText;
+
+                        var pingWritingField = document.querySelector('#write-generated-pin');
+                        pingWritingField.value = pingWritingField.value + buttonNumber;
+                    })
+                }
+                /*onClick on """ C """ button, clears display screen of user pin input area*/
+                document.querySelector('#clear').addEventListener('click', function() {
+                    document.querySelector('#write-generated-pin').value = "";
+                });
+
+                /*onClick on """ < """ button, clears the last digit of user pin input display screen*/
+                document.querySelector('#backspace').addEventListener('click', function() {
+                    const writtenPIN = document.querySelector('#write-generated-pin').value;
+                    const afterBackspace = writtenPIN.slice(0, -1);
+                    document.querySelector('#write-generated-pin').value = afterBackspace;
+                });
             </script>
 </body>
 
